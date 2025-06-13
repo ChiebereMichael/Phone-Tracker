@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
-import { parsePhoneNumber, AsYouType } from 'libphonenumber-js/max';
+import { parsePhoneNumber } from 'libphonenumber-js/max';
 import { FaWhatsapp, FaInfoCircle } from 'react-icons/fa';
+import { countryData, getCountryByCode } from './utils/countryData';
 
-function PhoneTracker() {
+function GlobalPhoneTracker() {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [trackingInfo, setTrackingInfo] = useState(null);
   const [error, setError] = useState('');
@@ -17,17 +18,17 @@ function PhoneTracker() {
         throw new Error('Invalid phone number');
       }
 
-      // Get more detailed information
+      const countryDetails = getCountryByCode(phoneNumberObj.country);
+      
       const info = {
-        country: phoneNumberObj.country || 'Unknown',
-        region: getRegion(phoneNumberObj.countryCallingCode, phoneNumberObj.nationalNumber),
-        carrier: phoneNumberObj.carrier || getCarrier(phoneNumberObj.countryCallingCode, phoneNumberObj.nationalNumber),
-        timezone: phoneNumberObj.timezone || getTimezone(phoneNumberObj.countryCallingCode),
+        country: countryDetails?.name || phoneNumberObj.country || 'Unknown',
+        countryCode: phoneNumberObj.country,
+        carrier: phoneNumberObj.carrier || 'Unknown carrier',
+        timezone: phoneNumberObj.timezone || 'Unknown timezone',
         type: formatType(phoneNumberObj.getType()),
-        possible: phoneNumberObj.isPossible() ? 'Yes' : 'No',
-        valid: phoneNumberObj.isValid() ? 'Yes' : 'No',
         international: phoneNumberObj.formatInternational(),
-        national: phoneNumberObj.formatNational()
+        national: phoneNumberObj.formatNational(),
+        dialCode: countryDetails?.dialCode || `+${phoneNumberObj.countryCallingCode}`
       };
 
       setTrackingInfo(info);
@@ -36,45 +37,6 @@ function PhoneTracker() {
       setError('Please enter a valid phone number with country code');
       setTrackingInfo(null);
     }
-  };
-
-  // Helper functions for additional data
-  const getRegion = (countryCode, nationalNumber) => {
-    // Add your own region mapping here
-    if (countryCode === '234') { // Nigeria
-      const prefix = nationalNumber.toString().substring(0, 3);
-      const regions = {
-        '812': 'Lagos',
-        '813': 'Abuja',
-        '814': 'Port Harcourt',
-        // Add more prefixes and regions as needed
-      };
-      return regions[prefix] || 'Unknown';
-    }
-    return 'Unknown';
-  };
-
-  const getCarrier = (countryCode, nationalNumber) => {
-    if (countryCode === '234') { // Nigeria
-      const prefix = nationalNumber.toString().substring(0, 4);
-      const carriers = {
-        '8120': 'MTN',
-        '8121': 'Glo',
-        '8124': 'Airtel',
-        '8125': '9mobile',
-        // Add more prefixes and carriers as needed
-      };
-      return carriers[prefix] || 'Unknown Nigerian carrier';
-    }
-    return 'Unknown';
-  };
-
-  const getTimezone = (countryCode) => {
-    const timezones = {
-      '234': 'Africa/Lagos', // Nigeria
-      // Add more country codes and timezones as needed
-    };
-    return timezones[countryCode] || 'Unknown';
   };
 
   const formatType = (type) => {
@@ -110,17 +72,17 @@ function PhoneTracker() {
             </div>
             <h1 className="text-3xl font-bold text-blue-400 mb-6">################################</h1>
             <p className="text-yellow-200">
-              This Tool Is Used For getting information about a phone number
+              This Tool Is Used For getting information about phone numbers worldwide
             </p>
           </div>
 
           <div className="mb-6">
             <label htmlFor="phone" className="block text-sm font-medium text-cyan-300 mb-2">
-              Please Input Number You Want To Track (e.g +916838353935):
+              Enter phone number with country code (e.g. +447911123456 for UK):
             </label>
             <PhoneInput
               international
-              defaultCountry="NG"
+              defaultCountry="GB" // Default to UK
               value={phoneNumber}
               onChange={setPhoneNumber}
               className="w-full p-3 rounded-md bg-gray-700 text-white border border-gray-600 focus:border-blue-500 focus:ring-blue-500"
@@ -140,13 +102,11 @@ function PhoneTracker() {
             <div className="mt-6 p-4 bg-gray-700 rounded-md text-green-400">
               <h2 className="text-xl font-bold mb-4">Tracking Information:</h2>
               <ul className="space-y-2">
-                <li><span className="font-semibold">Country:</span> {trackingInfo.country}</li>
-                <li><span className="font-semibold">Region:</span> {trackingInfo.region}</li>
+                <li><span className="font-semibold">Country:</span> {trackingInfo.country} ({trackingInfo.countryCode})</li>
+                <li><span className="font-semibold">Country Code:</span> {trackingInfo.dialCode}</li>
                 <li><span className="font-semibold">Carrier:</span> {trackingInfo.carrier}</li>
                 <li><span className="font-semibold">Timezone:</span> {trackingInfo.timezone}</li>
                 <li><span className="font-semibold">Number Type:</span> {trackingInfo.type}</li>
-                <li><span className="font-semibold">Valid:</span> {trackingInfo.valid}</li>
-                <li><span className="font-semibold">Possible:</span> {trackingInfo.possible}</li>
                 <li><span className="font-semibold">International Format:</span> {trackingInfo.international}</li>
                 <li><span className="font-semibold">National Format:</span> {trackingInfo.national}</li>
               </ul>
@@ -158,4 +118,4 @@ function PhoneTracker() {
   );
 }
 
-export default PhoneTracker;
+export default GlobalPhoneTracker;
