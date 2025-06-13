@@ -3,7 +3,7 @@ import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
 import { parsePhoneNumber } from 'libphonenumber-js/max';
 import { FaWhatsapp, FaInfoCircle } from 'react-icons/fa';
-import { countryData, getCountryByCode } from './utils/countryData';
+import { countryData, getCountryByCode } from '../utils/countryData';
 
 function GlobalPhoneTracker() {
   const [phoneNumber, setPhoneNumber] = useState('');
