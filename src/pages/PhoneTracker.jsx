@@ -57,7 +57,7 @@ function GlobalPhoneTracker() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-900 to-gray-900 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-b font-plus from-blue-900 to-gray-900 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md mx-auto bg-gray-800 rounded-xl shadow-md overflow-hidden md:max-w-2xl">
         <div className="p-8">
           <div className="text-center mb-8">
@@ -65,10 +65,6 @@ function GlobalPhoneTracker() {
             <div className="flex items-center justify-center text-green-400 mb-2">
               <FaInfoCircle className="mr-2" />
               <span>Created By IFearAids</span>
-            </div>
-            <div className="flex items-center justify-center text-green-400 mb-2">
-              <FaWhatsapp className="mr-2" />
-              <span>Contact Me On Whatsapp At +2348120414388</span>
             </div>
             <h1 className="text-3xl font-bold text-blue-400 mb-6">################################</h1>
             <p className="text-yellow-200">
@@ -78,7 +74,7 @@ function GlobalPhoneTracker() {
 
           <div className="mb-6">
             <label htmlFor="phone" className="block text-sm font-medium text-cyan-300 mb-2">
-              Enter phone number with country code (e.g. +447911123456 for UK):
+              Enter phone number with country code (e.g. +447911123456 ):
             </label>
             <PhoneInput
               international
